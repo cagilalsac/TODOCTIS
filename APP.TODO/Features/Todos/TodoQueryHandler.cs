@@ -1,6 +1,7 @@
 ﻿using APP.TODO.Domain;
 using CORE.APP.Features;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace APP.TODO.Features.Todos
 {
@@ -17,6 +18,8 @@ namespace APP.TODO.Features.Todos
         public double CompletePercentage { get; set; }
         public string CompletePercatageF { get; set; }
         public List<int> TopicIds { get; set; }
+
+        public string TopicNames { get; set; }
     }
 
     public class TodoQueryHandler : TodoDbHandler, IRequestHandler<TodoQueryRequest, IQueryable<TodoQueryResponse>>
@@ -27,7 +30,8 @@ namespace APP.TODO.Features.Todos
 
         public Task<IQueryable<TodoQueryResponse>> Handle(TodoQueryRequest request, CancellationToken cancellationToken)
         {
-            var query = _db.Todos.OrderBy(t => t.CompletePercentage).ThenByDescending(t => t.DueDate).ThenBy(t => t.Title)
+            var query = _db.Todos.Include(todo => todo.TodoTopics).ThenInclude(todotopic => todotopic.Topic)
+                .OrderBy(t => t.CompletePercentage).ThenByDescending(t => t.DueDate).ThenBy(t => t.Title)
                 .Select(t => new TodoQueryResponse()
                 {
                     Id = t.Id,
@@ -37,7 +41,9 @@ namespace APP.TODO.Features.Todos
                     Title = t.Title,
                     TopicIds = t.TopicIds,
                     DueDateF = t.DueDate.HasValue ? t.DueDate.Value.ToString("MM/dd/yyyy HH:mm:ss") : string.Empty,
-                    CompletePercatageF = t.CompletePercentage.ToString("N2")
+                    CompletePercatageF = t.CompletePercentage.ToString("N2"),
+
+                    TopicNames = string.Join(", ", t.TodoTopics.Select(todotopic => todotopic.Topic.Name))
                 });
             return Task.FromResult(query);
         }

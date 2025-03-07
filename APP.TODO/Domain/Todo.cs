@@ -32,7 +32,7 @@ namespace APP.TODO.Domain
 
         public double CompletePercentage { get; set; } // double, float -> 0, 0.25, 0.5, 0.75, 1
 
-        public List<TodoTopic> TodoTopics { get; set; } = new List<TodoTopic>();
+        public List<TodoTopic> TodoTopics { get; private set; } = new List<TodoTopic>();
         // TodoId: 1, TopicId: 1
         // TodoId: 1, TopicId: 2
         // TodoId: 2, TopicId: 1
@@ -42,8 +42,8 @@ namespace APP.TODO.Domain
         [NotMapped]
         public List<int> TopicIds 
         { 
-            get => TodoTopics.Select(tt => tt.TopicId).ToList(); 
-            set => TodoTopics = value.Select(v => new TodoTopic() { TopicId = v }).ToList(); 
+            get => TodoTopics?.Select(tt => tt.TopicId).ToList(); 
+            set => TodoTopics = value?.Select(v => new TodoTopic() { TopicId = v }).ToList(); 
         }
     }
 }

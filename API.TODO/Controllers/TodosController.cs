@@ -59,76 +59,76 @@ namespace API.TODO.Controllers
             }
         }
 
-		//// POST: api/Todos
-  //      [HttpPost]
-  //      public async Task<IActionResult> Post(TodoCreateRequest request)
-  //      {
-  //          try
-  //          {
-  //              if (ModelState.IsValid)
-  //              {
-  //                  var response = await _mediator.Send(request);
-  //                  if (response.IsSuccessful)
-  //                  {
-  //                      //return CreatedAtAction(nameof(Get), new { id = response.Id }, response);
-  //                      return Ok(response);
-  //                  }
-  //                  ModelState.AddModelError("TodosPost", response.Message);
-  //              }
-  //              return BadRequest(new CommandResponse(false, string.Join("|", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))));
-  //          }
-  //          catch (Exception exception)
-  //          {
-  //              _logger.LogError("TodosPost Exception: " + exception.Message);
-  //              return StatusCode(StatusCodes.Status500InternalServerError, new CommandResponse(false, "An exception occured during TodosPost.")); 
-  //          }
-  //      }
+        // POST: api/Todos
+        [HttpPost]
+        public async Task<IActionResult> Post(TodoCreateRequest request)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var response = await _mediator.Send(request);
+                    if (response.IsSuccessful)
+                    {
+                        return CreatedAtAction(nameof(Get), new { id = response.Id }, response);
+                        //return Ok(response);
+                    }
+                    ModelState.AddModelError("TodosPost", response.Message);
+                }
+                return BadRequest(new CommandResponse(false, string.Join("|", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))));
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError("TodosPost Exception: " + exception.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new CommandResponse(false, "An exception occured during TodosPost."));
+            }
+        }
 
-  //      // PUT: api/Todos
-  //      [HttpPut]
-  //      public async Task<IActionResult> Put(TodoUpdateRequest request)
-  //      {
-  //          try
-  //          {
-  //              if (ModelState.IsValid)
-  //              {
-  //                  var response = await _mediator.Send(request);
-  //                  if (response.IsSuccessful)
-  //                  {
-  //                      //return NoContent();
-  //                      return Ok(response);
-  //                  }
-  //                  ModelState.AddModelError("TodosPut", response.Message);
-  //              }
-  //              return BadRequest(new CommandResponse(false, string.Join("|", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))));
-  //          }
-  //          catch (Exception exception)
-  //          {
-  //              _logger.LogError("TodosPut Exception: " + exception.Message);
-  //              return StatusCode(StatusCodes.Status500InternalServerError, new CommandResponse(false, "An exception occured during TodosPut.")); 
-  //          }
-  //      }
+        // PUT: api/Todos
+        [HttpPut]
+        public async Task<IActionResult> Put(TodoUpdateRequest request)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var response = await _mediator.Send(request);
+                    if (response.IsSuccessful)
+                    {
+                        //return NoContent();
+                        return Ok(response);
+                    }
+                    ModelState.AddModelError("TodosPut", response.Message);
+                }
+                return BadRequest(new CommandResponse(false, string.Join("|", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))));
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError("TodosPut Exception: " + exception.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new CommandResponse(false, "An exception occured during TodosPut."));
+            }
+        }
 
-  //      // DELETE: api/Todos/5
-  //      [HttpDelete("{id}")]
-  //      public async Task<IActionResult> Delete(int id)
-  //      {
-  //          try
-  //          {
-  //              var response = await _mediator.Send(new TodoDeleteRequest() { Id = id });
-  //              if (response.IsSuccessful)
-  //              {
-  //                  //return NoContent();
-  //                  return Ok(response);
-  //              }
-  //              ModelState.AddModelError("TodosDelete", response.Message);
-  //              return BadRequest(new CommandResponse(false, string.Join("|", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))));
-  //          }
-  //          catch (Exception exception)
-  //          {
-  //              _logger.LogError("TodosDelete Exception: " + exception.Message);
-  //              return StatusCode(StatusCodes.Status500InternalServerError, new CommandResponse(false, "An exception occured during TodosDelete.")); 
-  //          }
-  //      }
-	}
+        // DELETE: api/Todos/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var response = await _mediator.Send(new TodoDeleteRequest() { Id = id });
+                if (response.IsSuccessful)
+                {
+                    //return NoContent();
+                    return Ok(response);
+                }
+                ModelState.AddModelError("TodosDelete", response.Message);
+                return BadRequest(new CommandResponse(false, string.Join("|", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))));
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError("TodosDelete Exception: " + exception.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new CommandResponse(false, "An exception occured during TodosDelete."));
+            }
+        }
+    }
 }
