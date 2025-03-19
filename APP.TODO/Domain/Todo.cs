@@ -45,5 +45,9 @@ namespace APP.TODO.Domain
             get => TodoTopics?.Select(tt => tt.TopicId).ToList(); 
             set => TodoTopics = value?.Select(v => new TodoTopic() { TopicId = v }).ToList(); 
         }
+
+        public int? CategoryId { get; set; }
+
+        public Category Category { get; set; }
     }
 }

@@ -24,6 +24,8 @@ namespace APP.TODO.Features.Todos
         public double CompletePercentage { get; set; } // between 0 and 1
 
         public List<int> TopicIds { get; set; }
+
+        public int? CategoryId { get; set; }
     }
 
     public class TodoUpdateHandler : TodoDbHandler, IRequestHandler<TodoUpdateRequest, CommandResponse>
@@ -62,6 +64,7 @@ namespace APP.TODO.Features.Todos
             entity.DueDate = request.DueDate;
             entity.Title = request.Title.Trim();
             entity.TopicIds = request.TopicIds;
+            entity.CategoryId = request.CategoryId;
 
             _db.Todos.Update(entity);
             await _db.SaveChangesAsync(cancellationToken);

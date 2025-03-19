@@ -3,6 +3,7 @@ using CORE.APP.Features;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace APP.TODO.Features.Todos
 {
@@ -24,6 +25,11 @@ namespace APP.TODO.Features.Todos
         public double CompletePercentage { get; set; } // between 0 and 1
 
         public List<int> TopicIds { get; set; }
+
+        [JsonIgnore]
+        public override int Id { get => base.Id; set => base.Id = value; }
+
+        public int? CategoryId { get; set; }
     }
 
     public class TodoCreateHandler : TodoDbHandler, IRequestHandler<TodoCreateRequest, CommandResponse>
@@ -43,7 +49,8 @@ namespace APP.TODO.Features.Todos
                 Description = request.Description?.Trim(),
                 DueDate = request.DueDate,
                 Title = request.Title.Trim(),
-                TopicIds = request.TopicIds
+                TopicIds = request.TopicIds,
+                CategoryId = request.CategoryId
             };
 
             _db.Todos.Add(entity);

@@ -3,6 +3,7 @@ using CORE.APP.Features;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace APP.TODO.Features.Topics
 {
@@ -11,6 +12,9 @@ namespace APP.TODO.Features.Topics
         [Required]
         [StringLength(100)]
         public string Name { get; set; }
+
+        [JsonIgnore]
+        public override int Id { get => base.Id; set => base.Id = value; }
     }
 
     public class TopicCreateHandler : TodoDbHandler, IRequestHandler<TopicCreateRequest, CommandResponse>

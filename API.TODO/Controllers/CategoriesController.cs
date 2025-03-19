@@ -3,31 +3,31 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MediatR;
 using CORE.APP.Features;
-using APP.TODO.Features.Todos;
+using APP.TODO.Features.Categories;
 
 //Generated from Custom Template.
 namespace API.TODO.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TodosController : ControllerBase
+    public class CategoriesController : ControllerBase
     {
-        private readonly ILogger<TodosController> _logger;
+        private readonly ILogger<CategoriesController> _logger;
         private readonly IMediator _mediator;
 
-        public TodosController(ILogger<TodosController> logger, IMediator mediator)
+        public CategoriesController(ILogger<CategoriesController> logger, IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
         }
 
-        // GET: api/Todos
+        // GET: api/Categories
         [HttpGet]
         public async Task<IActionResult> Get()
         {
             try
             {
-                var response = await _mediator.Send(new TodoQueryRequest());
+                var response = await _mediator.Send(new CategoryQueryRequest());
                 var list = await response.ToListAsync();
                 if (list.Any())
                     return Ok(list);
@@ -35,18 +35,18 @@ namespace API.TODO.Controllers
             }
             catch (Exception exception)
             {
-                _logger.LogError("TodosGet Exception: " + exception.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new CommandResponse(false, "An exception occured during TodosGet.")); 
+                _logger.LogError("CategoriesGet Exception: " + exception.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new CommandResponse(false, "An exception occured during CategoriesGet.")); 
             }
         }
 
-        // GET: api/Todos/5
+        // GET: api/Categories/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
             try
             {
-                var response = await _mediator.Send(new TodoQueryRequest());
+                var response = await _mediator.Send(new CategoryQueryRequest());
                 var item = await response.SingleOrDefaultAsync(r => r.Id == id);
                 if (item is not null)
                     return Ok(item);
@@ -54,14 +54,14 @@ namespace API.TODO.Controllers
             }
             catch (Exception exception)
             {
-                _logger.LogError("TodosGetById Exception: " + exception.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new CommandResponse(false, "An exception occured during TodosGetById.")); 
+                _logger.LogError("CategoriesGetById Exception: " + exception.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new CommandResponse(false, "An exception occured during CategoriesGetById.")); 
             }
         }
 
-        // POST: api/Todos
+		// POST: api/Categories
         [HttpPost]
-        public async Task<IActionResult> Post(TodoCreateRequest request)
+        public async Task<IActionResult> Post(CategoryCreateRequest request)
         {
             try
             {
@@ -70,23 +70,23 @@ namespace API.TODO.Controllers
                     var response = await _mediator.Send(request);
                     if (response.IsSuccessful)
                     {
-                        return CreatedAtAction(nameof(Get), new { id = response.Id }, response);
-                        //return Ok(response);
+                        //return CreatedAtAction(nameof(Get), new { id = response.Id }, response);
+                        return Ok(response);
                     }
-                    ModelState.AddModelError("TodosPost", response.Message);
+                    ModelState.AddModelError("CategoriesPost", response.Message);
                 }
                 return BadRequest(new CommandResponse(false, string.Join("|", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))));
             }
             catch (Exception exception)
             {
-                _logger.LogError("TodosPost Exception: " + exception.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new CommandResponse(false, "An exception occured during TodosPost."));
+                _logger.LogError("CategoriesPost Exception: " + exception.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new CommandResponse(false, "An exception occured during CategoriesPost.")); 
             }
         }
 
-        // PUT: api/Todos
+        // PUT: api/Categories
         [HttpPut]
-        public async Task<IActionResult> Put(TodoUpdateRequest request)
+        public async Task<IActionResult> Put(CategoryUpdateRequest request)
         {
             try
             {
@@ -98,51 +98,37 @@ namespace API.TODO.Controllers
                         //return NoContent();
                         return Ok(response);
                     }
-                    ModelState.AddModelError("TodosPut", response.Message);
+                    ModelState.AddModelError("CategoriesPut", response.Message);
                 }
                 return BadRequest(new CommandResponse(false, string.Join("|", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))));
             }
             catch (Exception exception)
             {
-                _logger.LogError("TodosPut Exception: " + exception.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new CommandResponse(false, "An exception occured during TodosPut."));
+                _logger.LogError("CategoriesPut Exception: " + exception.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new CommandResponse(false, "An exception occured during CategoriesPut.")); 
             }
         }
 
-        // DELETE: api/Todos/5
+        // DELETE: api/Categories/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                var response = await _mediator.Send(new TodoDeleteRequest() { Id = id });
+                var response = await _mediator.Send(new CategoryDeleteRequest() { Id = id });
                 if (response.IsSuccessful)
                 {
                     //return NoContent();
                     return Ok(response);
                 }
-                ModelState.AddModelError("TodosDelete", response.Message);
+                ModelState.AddModelError("CategoriesDelete", response.Message);
                 return BadRequest(new CommandResponse(false, string.Join("|", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))));
             }
             catch (Exception exception)
             {
-                _logger.LogError("TodosDelete Exception: " + exception.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new CommandResponse(false, "An exception occured during TodosDelete."));
+                _logger.LogError("CategoriesDelete Exception: " + exception.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new CommandResponse(false, "An exception occured during CategoriesDelete.")); 
             }
         }
-
-        // api/Todos/Filter
-        // Way 1:
-        //[HttpPost("Filter")]
-        // Way 2:
-        [HttpPost("[action]")]
-        public async Task<IActionResult> Filter(TodoQueryRequest request)
-        {
-            var query = await _mediator.Send(request);
-            var list = query.ToList();
-            if (list.Any())
-                return Ok(list);
-            return NotFound();
-        }
-    }
+	}
 }
