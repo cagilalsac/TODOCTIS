@@ -1,4 +1,6 @@
+using APP.Users;
 using APP.Users.Domain;
+using APP.Users.Features;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,11 @@ builder.AddServiceDefaults();
 // IOC:
 var connectionString = builder.Configuration.GetConnectionString("UsersDb");
 builder.Services.AddDbContext<UsersDb>(options => options.UseSqlite(connectionString));
+builder.Services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(UsersDbHandler).Assembly));
+
+// AppSettings:
+var section = builder.Configuration.GetSection(nameof(AppSettings));
+section.Bind(new AppSettings());
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
