@@ -4,12 +4,15 @@ using Microsoft.EntityFrameworkCore;
 using MediatR;
 using CORE.APP.Features;
 using APP.TODO.Features.Categories;
+using Microsoft.AspNetCore.Authorization;
 
 //Generated from Custom Template.
 namespace API.TODO.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    // Way 2:
+    [Authorize(Roles = "Admin")]
     public class CategoriesController : ControllerBase
     {
         private readonly ILogger<CategoriesController> _logger;
@@ -23,6 +26,8 @@ namespace API.TODO.Controllers
 
         // GET: api/Categories
         [HttpGet]
+        // Way 1:
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Get()
         {
             try
@@ -42,6 +47,8 @@ namespace API.TODO.Controllers
 
         // GET: api/Categories/5
         [HttpGet("{id}")]
+        // Way 1:
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Get(int id)
         {
             try
@@ -61,6 +68,8 @@ namespace API.TODO.Controllers
 
 		// POST: api/Categories
         [HttpPost]
+        // Way 1:
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Post(CategoryCreateRequest request)
         {
             try
@@ -86,6 +95,8 @@ namespace API.TODO.Controllers
 
         // PUT: api/Categories
         [HttpPut]
+        // Way 1:
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Put(CategoryUpdateRequest request)
         {
             try
@@ -111,6 +122,8 @@ namespace API.TODO.Controllers
 
         // DELETE: api/Categories/5
         [HttpDelete("{id}")]
+        // Way 1:
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             try

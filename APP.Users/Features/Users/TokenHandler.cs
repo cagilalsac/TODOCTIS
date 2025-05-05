@@ -1,8 +1,10 @@
 ﻿using APP.Users.Domain;
 using CORE.APP.Features;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace APP.Users.Features.Users
 {
@@ -13,6 +15,9 @@ namespace APP.Users.Features.Users
 
         [Required, StringLength(10, MinimumLength = 3)]
         public string Password { get; set; }
+
+        [JsonIgnore]
+        public override int Id { get => base.Id; set => base.Id = value; }
     }
 
     public class TokenResponse : CommandResponse
@@ -38,6 +43,11 @@ namespace APP.Users.Features.Users
                 return new TokenResponse(false, "Active user with the user name and password not found!");
             var claims = GetClaims(user);
             var expiration = DateTime.Now.AddMinutes(AppSettings.ExpirationInMinutes);
+            var token = CreateAccessToken(claims, expiration);
+            return new TokenResponse(true, "Token created successfully.", user.Id)
+            {
+                Token = JwtBearerDefaults.AuthenticationScheme + " " + token
+            };
         }
     }
 }

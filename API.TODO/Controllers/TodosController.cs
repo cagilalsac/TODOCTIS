@@ -4,12 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using MediatR;
 using CORE.APP.Features;
 using APP.TODO.Features.Todos;
+using Microsoft.AspNetCore.Authorization;
 
 //Generated from Custom Template.
 namespace API.TODO.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class TodosController : ControllerBase
     {
         private readonly ILogger<TodosController> _logger;

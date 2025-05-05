@@ -1,5 +1,6 @@
 ﻿using APP.TODO.Features.Topics;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,7 @@ namespace API.TODO.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class TopicsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -18,6 +20,7 @@ namespace API.TODO.Controllers
 
         // GET: api/Topics
         [HttpGet]
+        //[Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Get()
         {
             IQueryable<TopicQueryResponse> query = await _mediator.Send(new TopicQueryRequest());
@@ -29,6 +32,7 @@ namespace API.TODO.Controllers
 
         // GET: api/Topics/1
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Get(int id)
         {
             var query = await _mediator.Send(new TopicQueryRequest());
