@@ -8,7 +8,7 @@ namespace API.TODO.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class TopicsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -19,8 +19,7 @@ namespace API.TODO.Controllers
         }
 
         // GET: api/Topics
-        [HttpGet]
-        //[Authorize(Roles = "Admin,User")]
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> Get()
         {
             IQueryable<TopicQueryResponse> query = await _mediator.Send(new TopicQueryRequest());
@@ -32,7 +31,6 @@ namespace API.TODO.Controllers
 
         // GET: api/Topics/1
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Get(int id)
         {
             var query = await _mediator.Send(new TopicQueryRequest());
@@ -44,6 +42,7 @@ namespace API.TODO.Controllers
 
         // POST: api/Topics
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Post(TopicCreateRequest request)
         {
             if (ModelState.IsValid)
@@ -61,6 +60,7 @@ namespace API.TODO.Controllers
 
         // PUT: api/Topics
         [HttpPut]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Put(TopicUpdateRequest request)
         {
             if (ModelState.IsValid)
@@ -78,6 +78,7 @@ namespace API.TODO.Controllers
 
         // DELETE: api/Topics/3
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var response = await _mediator.Send(new TopicDeleteRequest() { Id = id });
